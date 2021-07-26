@@ -32,7 +32,8 @@
       "launchBrowser": true,
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/",
       "publishAllPorts": true,
-      "useSSL": true
+      "useSSL": true,
+      "DockerfileRunArguments": "-p 8000:80 -p 8001:443"
     }
   }
 }
