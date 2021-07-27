@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 
 const App: React.FC = (props) => {
-  const [message, setMessage] = useState("Webpack is cool!");
-  return <div>{message}</div>;
+  const [state, setState] = React.useState({ message: "Hello!!" });
+  return <div>{state.message}</div>;
 };
 
 export default App;
