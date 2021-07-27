@@ -1,6 +1,7 @@
 const { resolve } = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const TerserWebpackPlugin = require("terser-webpack-plugin");
+var LiveReloadPlugin = require('webpack-livereload-plugin');
 
 const isProd = process.env.NODE_ENV === "production";
 
@@ -27,10 +28,10 @@ const config = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: "./src/index.html",
+      template: isProd ? "./src/index.prod.html" : "./src/index.dev.html",
       filename: "index.html",
       inject: "body",
-    }),
+    })
   ],
 };
 
@@ -39,14 +40,7 @@ if (isProd) {
     minimizer: [new TerserWebpackPlugin()],
   };
 } else {
-  config.devServer = {
-    port: 9000,
-    open: true,
-    hot: true,
-    compress: true,
-    stats: "errors-only",
-    overlay: true,
-  };
+  config.plugins.push(new LiveReloadPlugin());
 }
 
 module.exports = config;
