@@ -55,6 +55,9 @@ namespace MyFavouritsApp
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+
+                // For handling client side routes
+                endpoints.MapFallbackToFile("/index.html");
             });
         }
     }

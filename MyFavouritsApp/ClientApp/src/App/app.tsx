@@ -1,8 +1,13 @@
 import React, { useState } from "react";
+import { Route } from "react-router-dom";
+import Main from "../Main/main";
+import UserInfo from "../UserInfo/user-info";
 
 const App: React.FC = (props) => {
-  const [state, setState] = React.useState({ message: "Hello!!" });
-  return <div>{state.message}</div>;
+  return (<div>
+    <Route path="/" exact><Main /></Route>
+    <Route path="/user-info"><UserInfo /></Route>
+  </div>);
 };
 
 export default App;
