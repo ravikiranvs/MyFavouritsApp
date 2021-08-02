@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using MyFavouritsApp.Utils;
 using System;
 using System.Collections.Generic;
@@ -16,10 +17,12 @@ namespace MyFavouritsApp.Controllers
     public class TokenController : ControllerBase
     {
         private readonly IHttpClientFactory _httpClientFactory;
+        private readonly IConfiguration _configuration;
 
-        public TokenController(IHttpClientFactory httpclientFactory)
+        public TokenController(IHttpClientFactory httpclientFactory, IConfiguration configuration)
         {
             _httpClientFactory = httpclientFactory;
+            _configuration = configuration;
         }
 
         // POST api/<TokenController>
@@ -29,7 +32,7 @@ namespace MyFavouritsApp.Controllers
         {
             var httpClient = _httpClientFactory.CreateClient();
 
-            var token = await new TokenHelper().GetRedditToken(code, userToken, httpClient);
+            var token = await new TokenHelper(_configuration).GetRedditToken(code, userToken, httpClient);
 
             return new UserTokenData { Token = token };
         }

@@ -9,22 +9,21 @@ using System.Net.Http.Headers;
 using Newtonsoft.Json;
 using System.Security.Cryptography;
 using System.IO;
+using Microsoft.Extensions.Configuration;
 
 namespace MyFavouritsApp.Utils
 {
     public class TokenHelper
     {
+        private readonly IConfiguration _configuration;
+        public TokenHelper(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
         public async Task<string> GetRedditToken(string code, string userToken = null, HttpClient httpClient = null)
         {
-            if (httpClient == null)
-            {
-                httpClient = new HttpClient();
-            }
-
-            string username = "goBGb_8I_vj33A";
-            string password = "DT8pB9nidwZnJjsMA1vGBgUeNUU";
-
-            string basicAuth = Convert.ToBase64String(ASCIIEncoding.ASCII.GetBytes(username + ":" + password));
+            var redditConfig = _configuration.GetSection("Reddit");
+            string basicAuth = Convert.ToBase64String(ASCIIEncoding.ASCII.GetBytes(redditConfig.GetValue<string>("AppId") + ":" + redditConfig.GetValue<string>("Secret")));
 
             var values = new Dictionary<string, string>
                 {
@@ -48,7 +47,7 @@ namespace MyFavouritsApp.Utils
 
         internal string CreateUserToken(UserToken token, string userToken = null)
         {
-            var secret = "SECRET";
+            var secret = _configuration.GetValue<string>("AppSecret");
             List<UserToken> newUserTokens;
             if (userToken != null)
             {
