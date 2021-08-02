@@ -3,13 +3,16 @@ import { Redirect } from "react-router-dom";
 import { reddit } from "../utils/auth-tokens";
 
 const Main: React.FC = (props) => {
-  const isRedditAuthenticated = !!reddit.get();
+  const isAuthenticated = !!reddit.get();
+  if(!isAuthenticated) {
+    reddit.start();
+  }
   return (
     <div>
-      {isRedditAuthenticated ? (
+      {isAuthenticated ? (
         <Redirect to={{ pathname: "/home" }}></Redirect>
       ) : (
-        <Redirect to={{ pathname: "/auth-reddit-callback" }}></Redirect>
+        <div></div>
       )}
     </div>
   );

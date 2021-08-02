@@ -32,7 +32,7 @@ namespace MyFavouritsApp.Controllers
         {
             var httpClient = _httpClientFactory.CreateClient();
 
-            var token = await new TokenHelper(_configuration).GetRedditToken(code, userToken, httpClient);
+            var token = await new TokenHelper(_configuration).UpdateTokenWithRedditAccess(code, userToken, httpClient);
 
             return new UserTokenData { Token = token };
         }

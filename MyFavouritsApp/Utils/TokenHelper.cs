@@ -20,8 +20,13 @@ namespace MyFavouritsApp.Utils
         {
             _configuration = configuration;
         }
-        public async Task<string> GetRedditToken(string code, string userToken = null, HttpClient httpClient = null)
+        public async Task<string> UpdateTokenWithRedditAccess(string code, string userToken = null, HttpClient httpClient = null)
         {
+            if(string.IsNullOrEmpty(code))
+            {
+                throw new ArgumentNullException(code);
+            }
+
             var redditConfig = _configuration.GetSection("Reddit");
             string basicAuth = Convert.ToBase64String(ASCIIEncoding.ASCII.GetBytes(redditConfig.GetValue<string>("AppId") + ":" + redditConfig.GetValue<string>("Secret")));
 
@@ -42,10 +47,10 @@ namespace MyFavouritsApp.Utils
 
             var responseObject = JsonConvert.DeserializeObject<RedditTokenResponse>(responseString);
 
-            return CreateUserToken(new UserToken { Expiry = responseObject.expires_in, Source = "REDDIT", Token = responseObject.access_token }, userToken);
+            return AddAccessToUserToken(new UserToken { Expiry = responseObject.expires_in, Source = TokenSource.Reddit, Token = responseObject.access_token }, userToken);
         }
 
-        internal string CreateUserToken(UserToken token, string userToken = null)
+        internal string AddAccessToUserToken(UserToken token, string userToken = null)
         {
             var secret = _configuration.GetValue<string>("AppSecret");
             List<UserToken> newUserTokens;
@@ -64,6 +69,13 @@ namespace MyFavouritsApp.Utils
             var newUserTokensEncrypted = AesOperation.EncryptString(secret, JsonConvert.SerializeObject(newUserTokensArray));
             return newUserTokensEncrypted;
         }
+
+        public string GetAccessToken(TokenSource source, string userToken)
+        {
+            var json = AesOperation.DecryptString(_configuration.GetValue<string>("AppSecret"), userToken);
+            var tokens = JsonConvert.DeserializeObject<UserToken[]>(json);
+            return tokens.FirstOrDefault(t => t.Source == source)?.Token;
+        }
     }
 
 
@@ -80,7 +92,7 @@ namespace MyFavouritsApp.Utils
         public string Token { get; set; }
         public int Expiry { get; set; }
 
-        public string Source { get; set; }
+        public TokenSource Source { get; set; }
     }
 
     public class AesOperation
@@ -146,4 +158,8 @@ namespace MyFavouritsApp.Utils
         }
     }
 
+    public enum TokenSource
+    {
+        Reddit,
+    }
 }
