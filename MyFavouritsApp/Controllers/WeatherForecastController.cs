@@ -27,6 +27,7 @@ namespace MyFavouritsApp.Controllers
         public IEnumerable<WeatherForecast> Get()
         {
             var rng = new Random();
+            var response = new MyFavouritsApp.Utils.RedditTokenHelper().GetToken("uRbmFzYKJLHefFYRUGahxWUXKw-g0w");
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
                 Date = DateTime.Now.AddDays(index),
