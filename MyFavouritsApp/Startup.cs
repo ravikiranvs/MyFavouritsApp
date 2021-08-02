@@ -28,6 +28,7 @@ namespace MyFavouritsApp
         {
 
             services.AddControllers();
+            services.AddHttpClient();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MyFavouritsApp", Version = "v1" });

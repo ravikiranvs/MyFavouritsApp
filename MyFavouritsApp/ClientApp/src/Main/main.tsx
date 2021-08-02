@@ -1,9 +1,18 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Redirect } from "react-router-dom";
+import { reddit } from "../utils/auth-tokens";
 
 const Main: React.FC = (props) => {
-  const [state, setState] = React.useState({ message: "Hello!" });
-  return <div>{state.message}<br /><Link to="/user-info">User Info</Link></div>;
+  const isRedditAuthenticated = !!reddit.get();
+  return (
+    <div>
+      {isRedditAuthenticated ? (
+        <Redirect to={{ pathname: "/home" }}></Redirect>
+      ) : (
+        <Redirect to={{ pathname: "/auth-reddit-callback" }}></Redirect>
+      )}
+    </div>
+  );
 };
 
 export default Main;
