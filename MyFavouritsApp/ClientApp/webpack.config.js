@@ -7,6 +7,7 @@ const isProd = process.env.NODE_ENV === "production";
 
 const config = {
   mode: isProd ? "production" : "development",
+  devtool: isProd ? "source-map" : "inline-source-map",
   entry: {
     index: "./src/index.tsx",
   },
@@ -23,6 +24,10 @@ const config = {
         test: /\.tsx?$/,
         use: "babel-loader",
         exclude: /node_modules/,
+      },
+      {
+        test: /\.css$/i,
+        use: ["style-loader", "css-loader"],
       },
     ],
   },

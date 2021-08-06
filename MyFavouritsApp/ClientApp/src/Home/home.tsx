@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { RedditDataClient, RedditFavouritsResponceRoot } from "../Data/web-api"
 import { reddit } from "../utils/auth-tokens";
+const s = require("./home.css");
 
 const Home: React.FC = (props) => {
   const [redditSavedState, setSedditSavedState] = useState<RedditFavouritsResponceRoot | null>(null);
@@ -27,7 +28,7 @@ const Home: React.FC = (props) => {
     });
     return (
       <div>
-        <h1 style={{ textAlign: "center" }}>My Favourits</h1>
+        <h1 className="header" style={{ textAlign: "center" }}>My Favourits</h1>
         <div>{favJsx}</div>
       </div>
     );
