@@ -47,7 +47,9 @@ namespace MyFavouritsApp.Utils
 
             var responseObject = JsonConvert.DeserializeObject<RedditTokenResponse>(responseString);
 
-            return AddAccessToUserToken(new UserToken { Expiry = responseObject.expires_in, Source = TokenSource.Reddit, Token = responseObject.access_token }, userToken);
+            var expiry = DateTime.UtcNow.AddSeconds(responseObject.expires_in);
+
+            return AddAccessToUserToken(new UserToken { Expiry = expiry, Source = TokenSource.Reddit, Token = responseObject.access_token }, userToken);
         }
 
         internal string AddAccessToUserToken(UserToken token, string userToken = null)
@@ -90,7 +92,7 @@ namespace MyFavouritsApp.Utils
     public class UserToken
     {
         public string Token { get; set; }
-        public int Expiry { get; set; }
+        public DateTime Expiry { get; set; }
 
         public TokenSource Source { get; set; }
     }

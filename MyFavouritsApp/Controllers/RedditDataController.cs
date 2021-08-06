@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using MyFavouritsApp.Model;
 using MyFavouritsApp.Utils;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,7 +29,7 @@ namespace MyFavouritsApp.Controllers
 
         // GET: api/<RedditDataController>
         [HttpGet("favourits")]
-        public async Task GetFavourits(string token)
+        public async Task<RedditFavouritsResponceRoot> GetFavourits(string token)
         {
             var redditAccessToken = new TokenHelper(_configuration).GetAccessToken(TokenSource.Reddit, token);
             var httpClient = _httpClientFactory.CreateClient();
@@ -39,7 +41,9 @@ namespace MyFavouritsApp.Controllers
 
             var responseString = await response.Content.ReadAsStringAsync();
 
-            return;
+            var favourits = JsonConvert.DeserializeObject<RedditFavouritsResponceRoot>(responseString);
+
+            return favourits;
         }
 
         // GET api/<RedditDataController>/5
